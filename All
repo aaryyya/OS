@@ -3448,4 +3448,113 @@ while true; do
         *) echo "Invalid choice. Please try again." ;;
     esac
 done
+***********************************************************
+Deadlock
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_PROCESSES 10
+#define MAX_RESOURCES 10
+
+// Adjacency matrix to represent the wait-for graph
+int wait_for_graph[MAX_PROCESSES][MAX_PROCESSES];
+
+// Function to initialize the wait-for graph (all values set to 0)
+void initializeGraph(int num_processes) {
+for (int i = 0; i < num_processes; i++) {
+for (int j = 0; j < num_processes; j++) {
+wait_for_graph[i][j] = 0;
+}
+}
+}
+
+// Function to add an edge to the wait-for graph (Process i waits for process j)
+void addEdge(int i, int j) {
+wait_for_graph[i][j] = 1;
+}
+
+// Function to detect a cycle in the wait-for graph
+int isCyclicUtil(int v, int visited[], int recStack[], int num_processes) {
+// Mark the current node as visited and add to the recursion stack
+visited[v] = 1;
+recStack[v] = 1;
+
+// Recur for all the vertices adjacent to this vertex
+for (int i = 0; i < num_processes; i++) {
+if (wait_for_graph[v][i]) {
+if (!visited[i] && isCyclicUtil(i, visited, recStack, num_processes)) {
+return 1; // Cycle detected
+} else if (recStack[i]) {
+return 1; // Cycle detected
+}
+}
+}
+
+// Remove from recursion stack
+recStack[v] = 0;
+return 0;
+}
+
+// Function to detect deadlock by detecting a cycle in the wait-for graph
+int detectDeadlock(int num_processes) {
+int visited[MAX_PROCESSES] = {0};
+int recStack[MAX_PROCESSES] = {0}; // Recursion stack to track the path
+
+// Check for cycles in different DFS trees
+for (int i = 0; i < num_processes; i++) {
+if (!visited[i]) {
+if (isCyclicUtil(i, visited, recStack, num_processes)) {
+return 1; // Deadlock detected
+}
+}
+}
+
+return 0; // No deadlock detected
+}
+
+int main() {
+int num_processes, num_edges;
+
+// Get input from the user
+printf("Enter the number of processes: ");
+scanf("%d", &num_processes);
+
+if (num_processes > MAX_PROCESSES) {
+printf("The maximum allowed number of processes is %d\n", MAX_PROCESSES);
+return -1;
+}
+
+// Initialize the wait-for graph
+initializeGraph(num_processes);
+
+// Input edges (waiting relationships between processes)
+printf("Enter the number of edges (process relationships): ");
+scanf("%d", &num_edges);
+
+printf("Enter the edges (format: <i> <j> means process i waits for process j):\n");
+for (int i = 0; i < num_edges; i++) {
+int i, j;
+scanf("%d %d", &i, &j);
+if (i >= 0 && i < num_processes && j >= 0 && j < num_processes) {
+addEdge(i, j);
+} else {
+printf("Invalid process number! Should be between 0 and %d.\n", num_processes - 1);
+}
+}
+
+// Detect deadlock
+if (detectDeadlock(num_processes)) {
+printf("Deadlock detected in the system.\n");
+} else {
+printf("No deadlock detected.\n");
+}
+
+return 0;
+}
+
+
+
+
+
+
 
