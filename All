@@ -297,6 +297,51 @@ else
   echo "The string '$str' is not a palindrome"
 fi
 
+
+####Reverse Digits:-
+#!/bin/bash
+
+# Reverse Digits
+reverse_digits() {
+  number=$1
+  reverse=0
+  while [ $number -gt 0 ]; do
+    digit=$(( number % 10 ))
+    reverse=$(( reverse * 10 + digit ))
+    number=$(( number / 10 ))
+  done
+  echo "Reversed number: $reverse"
+}
+
+reverse_digits 12345
+
+
+####Armstrong Number Check:-
+#!/bin/bash
+
+# Armstrong Number Check
+is_armstrong() {
+  number=$1
+  sum=0
+  temp=$number
+  length=${#number}
+  
+  while [ $temp -gt 0 ]; do
+    digit=$(( temp % 10 ))
+    sum=$(( sum + digit ** length ))
+    temp=$(( temp / 10 ))
+  done
+  
+  if [ $sum -eq $number ]; then
+    echo "$number is an Armstrong number"
+  else
+    echo "$number is not an Armstrong number"
+  fi
+}
+
+is_armstrong 153
+is_armstrong 123
+
 *****************************************************************************
 2)//2.Write a program demonstrating use of different system calls. 
 
@@ -3069,7 +3114,7 @@ public class OS_CP {
 }
 ***********************************************************************
 
-25.	Write a program to load ALP program from input file to main memory
+25).	Write a program to load ALP program from input file to main memory
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -3122,7 +3167,7 @@ int main() {
 }
 
 
-26.	Write a program to check Opcode error in a given job and raise an interrupt.
+26).	Write a program to check Opcode error in a given job and raise an interrupt.
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -3281,3 +3326,126 @@ int main() {
 
     return 0;
 }
+*********************************************************
+ArrrayOperations
+#!/bin/bash
+
+array=(1 2 3 4 5)
+# Function to display the array
+display_array(){
+    echo "Array elements: ${array[@]}"
+}
+
+# Function to insert an element
+insert_element() {
+    read -p "Enter the element to insert: " element
+    array+=($element)
+    echo "$element added to the array."
+}
+#!/bin/bash
+
+array=(1 2 3 4 5)
+
+display_array() {
+    echo "Array elements: ${array[@]}"
+}
+
+insert_element() {
+    echo -n "Enter the element to insert: "
+    read element
+    array+=("$element")
+    echo "$element added to the array."
+}
+
+delete_element() {
+    echo -n "Enter the element to delete: "
+    read element
+    for i in "${!array[@]}"; do
+        if [[ "${array[i]}" == "$element" ]]; then
+            unset 'array[i]'
+            echo "$element deleted from the array."
+            array=("${array[@]}")  # Re-index the array after deletion
+            return
+        fi
+    done
+    echo "$element not found in the array."
+}
+
+search_element() {
+    echo -n "Enter the element to search for: "
+    read element
+    for i in "${!array[@]}"; do
+        if [[ "${array[i]}" == "$element" ]]; then
+            echo "$element found at index $i."
+            return
+        fi
+    done
+    echo "$element not found in the array."
+}
+
+while true; do
+    echo -e "\nChoose an operation:"
+    echo "1. Insert"
+    echo "2. Delete"
+    echo "3. Search"
+    echo "4. Display"
+    echo "5. Exit"
+    echo -n "Enter choice [1-5]: "
+    read choice
+
+    case "$choice" in
+        1) insert_element ;;
+        2) delete_element ;;
+        3) search_element ;;
+        4) display_array ;;
+        5) echo "Exiting..."; break ;;
+        *) echo "Invalid choice. Please try again." ;;
+    esac
+done
+
+# Function to delete an element
+delete_element() {
+    read -p "Enter the element to delete: " element
+    for i in "${!array[@]}"; do
+        if [ "${array[$i]}" == "$element" ]; then
+            unset 'array[i]'
+            echo "$element deleted from the array."
+            array=("${array[@]}")  # Re-index the array after deletion
+            return
+        fi
+    done
+    echo "$element not found in the array."
+}
+
+# Function to search for an element
+search_element() {
+    read -p "Enter the element to search for: " element
+    for i in "${!array[@]}"; do
+        if [ "${array[$i]}" == "$element" ]; then
+            echo "$element found at index $i."
+            return
+        fi
+    done
+    echo "$element not found in the array."
+}
+
+# Main loop
+while true; do
+    echo -e "\nChoose an operation:"
+    echo "1. Insert"
+    echo "2. Delete"
+    echo "3. Search"
+    echo "4. Display"
+    echo "5. Exit"
+    read -p "Enter choice [1-5]: " choice
+
+    case $choice in
+        1) insert_element ;;
+        2) delete_element ;;
+        3) search_element ;;
+        4) display_array ;;
+        5) echo "Exiting..."; break ;;
+        *) echo "Invalid choice. Please try again." ;;
+    esac
+done
+
